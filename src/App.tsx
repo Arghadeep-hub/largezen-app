@@ -3,13 +3,14 @@ import {Provider, useSelector} from 'react-redux';
 import {store} from './redux/store';
 // Navigation
 import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // Screens
 import Home from './view/Home';
 import Leads from './view/Leads';
 import Icons from './components/Icons';
 import Meetings from './view/Meetings';
 import Task from './view/Task';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import Colors from './components/Colors';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -18,7 +19,7 @@ export type RootStackParamList = {
   Task: undefined;
 };
 
-const Tab = createBottomTabNavigator<RootStackParamList>();
+const Tab = createMaterialBottomTabNavigator<RootStackParamList>();
 
 function AppWrapper() {
   const config = useSelector<any>(state => state.config);
@@ -26,17 +27,13 @@ function AppWrapper() {
 
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerShown: false,
-        }}>
+      <Tab.Navigator initialRouteName="Home" activeColor="#e91e63">
         <Tab.Screen
           name="Home"
           component={Home}
           options={{
             title: '',
-            tabBarIcon: () => <Icons name="home" />,
+            tabBarIcon: ({color}) => <Icons name="home" color={color} />,
           }}
         />
         <Tab.Screen
@@ -44,7 +41,9 @@ function AppWrapper() {
           component={Leads}
           options={{
             title: '',
-            tabBarIcon: () => <Icons name="addusergroup" />,
+            tabBarIcon: ({color}) => (
+              <Icons name="addusergroup" color={color} />
+            ),
           }}
         />
         <Tab.Screen
@@ -52,7 +51,7 @@ function AppWrapper() {
           component={Meetings}
           options={{
             title: '',
-            tabBarIcon: () => <Icons name="calendar" />,
+            tabBarIcon: ({color}) => <Icons name="calendar" color={color} />,
           }}
         />
         <Tab.Screen
@@ -60,7 +59,7 @@ function AppWrapper() {
           component={Task}
           options={{
             title: '',
-            tabBarIcon: () => <Icons name="profile" />,
+            tabBarIcon: ({color}) => <Icons name="profile" color={color} />,
           }}
         />
       </Tab.Navigator>

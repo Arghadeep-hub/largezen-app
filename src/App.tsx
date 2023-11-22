@@ -10,7 +10,6 @@ import Icons from './components/Icons';
 import Meetings from './view/Meetings';
 import Task from './view/Task';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import Colors from './components/Colors';
 
 export type RootStackParamList = {
   Home: undefined;

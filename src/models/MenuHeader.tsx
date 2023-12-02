@@ -15,7 +15,7 @@ export default function MenuHeader({title}: MenuHeaderProps) {
 
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <View style={{marginEnd: 16}}>
-          <Icon name="bell" size={24} />
+          <Icon name="bell" size={28} color={Colors.yellow} />
           <View style={styles.absolutePos}>
             <Text style={{fontWeight: '600', fontSize: 10}}>1</Text>
           </View>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   userIcon: {
     width: 28,
     height: 28,
-    borderColor: Colors.black,
+    borderColor: Colors.yellow,
     borderWidth: 2,
     borderStyle: 'solid',
     borderRadius: 50,
@@ -48,12 +48,13 @@ const styles = StyleSheet.create({
   textIcon: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: Colors.yellow,
   },
   absolutePos: {
     position: 'absolute',
     top: -2,
     right: 0,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.yellow,
     width: 15,
     height: 15,
     borderRadius: 50,

@@ -1,8 +1,7 @@
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {Button, StatusBar, Text, View} from 'react-native';
+import {Button, Text, View} from 'react-native';
 import {RootStackParamList} from '../App';
-import Colors from '../components/Colors';
 import MenuHeader from '../models/MenuHeader';
 import {dashboard_styles} from '../styles/dashboard_styles';
 
@@ -11,7 +10,6 @@ type HomeProps = BottomTabScreenProps<RootStackParamList, 'Home'>;
 function Home({navigation}: HomeProps) {
   return (
     <View>
-      <StatusBar backgroundColor={Colors.yellow} />
       <View style={dashboard_styles.LoginHead}>
         <MenuHeader title="Dashboard" />
         <Text style={dashboard_styles.paragrapg}>Welcome to dashboard</Text>

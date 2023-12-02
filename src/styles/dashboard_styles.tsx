@@ -29,6 +29,6 @@ export const dashboard_styles = StyleSheet.create({
     paddingBottom: 9,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    backgroundColor: Colors.yellow,
+    backgroundColor: Colors.blue,
   },
 });

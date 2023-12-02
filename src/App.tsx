@@ -1,5 +1,5 @@
 import React from 'react';
-import {Provider, useSelector} from 'react-redux';
+import {Provider} from 'react-redux';
 import {store} from './redux/store';
 // Navigation
 import {NavigationContainer} from '@react-navigation/native';
@@ -9,24 +9,29 @@ import Leads from './view/Leads';
 import Icons from './components/Icons';
 import Meetings from './view/Meetings';
 import Task from './view/Task';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Colors from './components/Colors';
+import {StatusBar} from 'react-native';
 
 export type RootStackParamList = {
   Home: undefined;
-  Leads: {productId: string};
+  Leads: undefined;
   Meetings: undefined;
   Task: undefined;
 };
 
-const Tab = createMaterialBottomTabNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 function AppWrapper() {
-  const config = useSelector<any>(state => state.config);
-  console.log(config);
-
   return (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName="Home" activeColor="#e91e63">
+      <StatusBar backgroundColor={Colors.blue} />
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: Colors.violate,
+        }}>
         <Tab.Screen
           name="Home"
           component={Home}

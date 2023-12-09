@@ -1,4 +1,4 @@
-import {StatusBar, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import Colors from '../components/Colors';
 
 export const leads_styles = StyleSheet.create({
@@ -43,5 +43,10 @@ export const leads_styles = StyleSheet.create({
   },
   titleFont: {
     fontSize: 16,
+  },
+  itemButton: {
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: 6,
   },
 });

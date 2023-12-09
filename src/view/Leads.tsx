@@ -1,13 +1,10 @@
-import {
-  BottomTabScreenProps,
-  BottomTabNavigationProp,
-} from '@react-navigation/bottom-tabs';
+// import {
+//   BottomTabScreenProps,
+//   BottomTabNavigationProp,
+// } from '@react-navigation/bottom-tabs';
 import React, {useState} from 'react';
 import {
-  Alert,
-  Button,
   FlatList,
-  Modal,
   PermissionsAndroid,
   SafeAreaView,
   ScrollView,
@@ -15,15 +12,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {RootStackParamList} from '../App';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+// import {RootStackParamList} from '../App';
+import {useIsFocused} from '@react-navigation/native';
 import MenuHeader from '../models/MenuHeader';
 import {dashboard_styles} from '../styles/dashboard_styles';
 import Contact from 'react-native-contacts';
 import {leads_styles} from '../styles/leads_styles';
 import Colors from '../components/Colors';
+import ContactModal from '../components/Leads/ContactModal';
+import {useDispatch, useSelector} from 'react-redux';
+import {storeStracture} from '../redux/store';
+import Icons from '../components/Icons';
+import {decreaseStatus, increaseStatus} from '../redux/leadSlice';
 
-type DetailsProps = BottomTabScreenProps<RootStackParamList, 'Leads'>;
+// type DetailsProps = BottomTabScreenProps<RootStackParamList, 'Leads'>;
 
 const slideNav = [
   {name: 'New Leads'},
@@ -33,12 +35,26 @@ const slideNav = [
   {name: 'Deal Close'},
 ];
 
-function Leads({route}: DetailsProps) {
-  const [contactList, setContactList] = useState<any[]>();
-  const [navNum, setNavNum] = useState<number>(0);
-  const [openModal, setOpenModal] = useState<boolean>(false);
+function Leads() {
+  const dispatch = useDispatch();
   const isFocused = useIsFocused();
+  const [status, setStatus] = useState<number>(0);
+  const [contactList, setContactList] = useState<any[]>([]);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const getAllLeads = useSelector<storeStracture>(
+    state => state.leads.collections,
+  );
   // const navigation = useNavigation<BottomTabNavigationProp<RootStackParamList>>();
+
+  const nextStatus = (id: string) => {
+    dispatch(increaseStatus(id));
+    status < 4 && setStatus(status + 1);
+  };
+
+  const prevStatus = (id: string) => {
+    dispatch(decreaseStatus(id));
+    status > 0 && setStatus(status - 1);
+  };
 
   React.useEffect(() => {
     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
@@ -67,15 +83,16 @@ function Leads({route}: DetailsProps) {
       </View>
 
       <View style={leads_styles.container}>
+        {/* Horizontal scroll */}
         <ScrollView
           horizontal={true}
           contentContainerStyle={{columnGap: 16}}
           style={{marginVertical: 10}}>
           {slideNav?.map((item, id) => (
-            <TouchableOpacity key={id} onPress={() => setNavNum(id)}>
+            <TouchableOpacity key={id} onPress={() => setStatus(id)}>
               <Text
                 style={
-                  navNum === id
+                  status === id
                     ? leads_styles.buttonStyleActive
                     : leads_styles.buttonStyle
                 }>
@@ -84,6 +101,34 @@ function Leads({route}: DetailsProps) {
             </TouchableOpacity>
           ))}
         </ScrollView>
+
+        <FlatList
+          data={getAllLeads}
+          renderItem={({item}) =>
+            item.status === status ? (
+              <View style={leads_styles.itemBody}>
+                <View>
+                  <Text style={leads_styles.titleFont}>{item.name}</Text>
+                  <Text>{item.phone}</Text>
+                </View>
+                <View style={leads_styles.itemButton}>
+                  {item.status !== 0 && (
+                    <TouchableOpacity onPress={() => prevStatus(item.id)}>
+                      <Icons name="leftcircleo" color={Colors.gray} />
+                    </TouchableOpacity>
+                  )}
+
+                  {item.status !== 4 && (
+                    <TouchableOpacity onPress={() => nextStatus(item.id)}>
+                      <Icons name="rightcircleo" color={Colors.gray} />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
+            ) : null
+          }
+          keyExtractor={item => item.phone}
+        />
       </View>
 
       <TouchableOpacity
@@ -92,35 +137,11 @@ function Leads({route}: DetailsProps) {
         <Text style={{fontSize: 30, color: Colors.white}}>+</Text>
       </TouchableOpacity>
 
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={openModal}
-        onRequestClose={() => {
-          setOpenModal(!openModal);
-        }}>
-        <View style={{flex: 1, margin: 10}}>
-          <FlatList
-            data={contactList}
-            renderItem={({item}) => (
-              <View style={leads_styles.itemBody}>
-                <View>
-                  <Text style={leads_styles.titleFont}>{item.displayName}</Text>
-                  <Text>{item.phoneNumbers[0]?.number}</Text>
-                </View>
-                <Button title="add" color={Colors.skin} />
-              </View>
-            )}
-            keyExtractor={item => item.recordID}
-          />
-
-          <Button
-            title="Cancel"
-            onPress={() => setOpenModal(false)}
-            color={Colors.orange}
-          />
-        </View>
-      </Modal>
+      <ContactModal
+        contactList={contactList}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+      />
     </SafeAreaView>
   );
 }

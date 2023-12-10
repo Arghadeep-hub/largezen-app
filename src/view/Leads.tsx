@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -40,6 +41,7 @@ function Leads() {
   const isFocused = useIsFocused();
   const [status, setStatus] = useState<number>(0);
   const [contactList, setContactList] = useState<any[]>([]);
+  const [inputVal, setInputVal] = useState<string>('');
   const [openModal, setOpenModal] = useState<boolean>(false);
   const getAllLeads = useSelector<storeStracture>(
     state => state.leads.collections,
@@ -83,6 +85,13 @@ function Leads() {
       </View>
 
       <View style={leads_styles.container}>
+        <TextInput
+          style={leads_styles.itemInputBox}
+          value={inputVal}
+          onChangeText={setInputVal}
+          placeholder="Search Leads..."
+          placeholderTextColor={Colors.blue}
+        />
         {/* Horizontal scroll */}
         <ScrollView
           horizontal={true}
@@ -106,7 +115,12 @@ function Leads() {
           data={getAllLeads}
           renderItem={({item}) =>
             item.status === status ? (
-              <View style={leads_styles.itemBody}>
+              <View
+                style={[
+                  leads_styles.itemHeading,
+                  leads_styles.itemBody,
+                  leads_styles.itemGroup,
+                ]}>
                 <View>
                   <Text style={leads_styles.titleFont}>{item.name}</Text>
                   <Text>{item.phone}</Text>
@@ -114,13 +128,13 @@ function Leads() {
                 <View style={leads_styles.itemButton}>
                   {item.status !== 0 && (
                     <TouchableOpacity onPress={() => prevStatus(item.id)}>
-                      <Icons name="leftcircleo" color={Colors.gray} />
+                      <Icons name="leftcircle" color={Colors.gray} />
                     </TouchableOpacity>
                   )}
 
                   {item.status !== 4 && (
                     <TouchableOpacity onPress={() => nextStatus(item.id)}>
-                      <Icons name="rightcircleo" color={Colors.gray} />
+                      <Icons name="rightcircle" color={Colors.gray} />
                     </TouchableOpacity>
                   )}
                 </View>

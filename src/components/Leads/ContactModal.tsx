@@ -1,11 +1,11 @@
 import React from 'react';
-import {Button, FlatList, Modal, View} from 'react-native';
-import {Text} from 'react-native-paper';
+import {Button, FlatList, Modal, TextInput, View} from 'react-native';
 import Colors from '../Colors';
-import {leads_styles} from '../../styles/leads_styles';
 import {useDispatch} from 'react-redux';
 import {addLeads} from '../../redux/leadSlice';
 import uuid from 'react-native-uuid';
+import AccordianItems from './AccordianItems';
+import {leads_styles} from '../../styles/leads_styles';
 
 interface ModalProps {
   contactList: any[];
@@ -31,22 +31,15 @@ function ContactModal({openModal, setOpenModal, contactList}: ModalProps) {
         setOpenModal(!openModal);
       }}>
       <View style={{flex: 1, margin: 10}}>
+        <TextInput
+          style={leads_styles.itemInputBox}
+          placeholder="Search Contacts..."
+          placeholderTextColor={Colors.blue}
+        />
         <FlatList
           data={contactList}
           renderItem={({item}) => (
-            <View style={leads_styles.itemBody}>
-              <View>
-                <Text style={leads_styles.titleFont}>{item.displayName}</Text>
-                <Text>{item.phoneNumbers[0]?.number}</Text>
-              </View>
-              <Button
-                title="add"
-                color={Colors.skin}
-                onPress={() =>
-                  handleClick(item.displayName, item.phoneNumbers[0]?.number)
-                }
-              />
-            </View>
+            <AccordianItems handleClick={handleClick} item={item} />
           )}
           keyExtractor={item => item.recordID}
         />

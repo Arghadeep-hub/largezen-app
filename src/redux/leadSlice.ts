@@ -5,13 +5,17 @@ export interface contact {
   name: string;
   phone: number;
   status: number;
+  address: string;
+  needed: string;
+  meeting: string;
+  meeting_status: number;
 }
 
 export interface leadSliceProps {
   collections: contact[];
 }
 
-const initialState: leadSliceProps = {
+export const initialState: leadSliceProps = {
   collections: [],
 };
 
@@ -21,19 +25,62 @@ export const leadSlice = createSlice({
   reducers: {
     addLeads: (state, action: PayloadAction<contact>) => {
       state.collections = state.collections.concat(action.payload);
-      //   console.log(action.payload);
     },
-    increaseStatus: (state, action: PayloadAction<string>) => {
-      state.collections?.map(
-        item =>
-          item.id === action.payload && item.status < 4 && (item.status += 1),
-      );
+    increaseStatus: (
+      state,
+      action: PayloadAction<{id: string; screen: string}>,
+    ) => {
+      switch (action.payload.screen) {
+        case 'meeting':
+          state.collections?.map(
+            item =>
+              item.id === action.payload.id &&
+              item.meeting_status < 2 &&
+              (item.meeting_status += 1),
+          );
+          break;
+
+        case 'leads':
+          state.collections?.map(
+            item =>
+              item.id === action.payload.id &&
+              item.status < 4 &&
+              (item.status += 1),
+          );
+          break;
+
+        default:
+          console.log(action.payload);
+          break;
+      }
     },
-    decreaseStatus: (state, action: PayloadAction<string>) => {
-      state.collections?.map(
-        item =>
-          item.id === action.payload && item.status > 0 && (item.status -= 1),
-      );
+    decreaseStatus: (
+      state,
+      action: PayloadAction<{id: string; screen: string}>,
+    ) => {
+      switch (action.payload.screen) {
+        case 'meeting':
+          state.collections?.map(
+            item =>
+              item.id === action.payload.id &&
+              item.meeting_status > 0 &&
+              (item.meeting_status -= 1),
+          );
+          break;
+
+        case 'leads':
+          state.collections?.map(
+            item =>
+              item.id === action.payload.id &&
+              item.status > 0 &&
+              (item.status -= 1),
+          );
+          break;
+
+        default:
+          console.log(action.payload);
+          break;
+      }
     },
   },
 });

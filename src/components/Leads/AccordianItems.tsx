@@ -1,12 +1,41 @@
 import React from 'react';
 import {Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {leads_styles} from '../../styles/leads_styles';
+import {leads_styles} from '../../styles/leads.styles';
 import Colors from '../Colors';
 import Icons from '../Icons';
 import {Button} from 'react-native-paper';
+import {
+  DateTimePickerAndroid,
+  AndroidNativeProps,
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
 
-function AccordianItems({item, handleClick}: any) {
+function AccordianItems({item, handleClick}: any): React.JSX.Element {
+  const [date, setDate] = React.useState<Date>(new Date());
   const [isExpand, setIsExpand] = React.useState<boolean>(false);
+  const [name, setName] = React.useState<string>('');
+  const [phone, setPhone] = React.useState<string>('');
+  const [address, setAddress] = React.useState<string>('');
+  const [needed, setNeeded] = React.useState<string>('');
+
+  React.useEffect(() => {
+    setName(item.displayName);
+    setPhone(item.phoneNumbers[0]?.number);
+  }, [item.displayName, item.phoneNumbers]);
+
+  const onChange = (event: DateTimePickerEvent, selectedDate?: Date): void => {
+    if (event.type === 'set' && selectedDate) setDate(selectedDate);
+  };
+
+  const showMode = (currentMode: AndroidNativeProps['mode']): void => {
+    DateTimePickerAndroid.open({
+      value: date,
+      onChange,
+      mode: currentMode,
+      is24Hour: false,
+    });
+  };
+
   return (
     <View style={leads_styles.itemGroup}>
       <TouchableOpacity
@@ -27,7 +56,8 @@ function AccordianItems({item, handleClick}: any) {
             <View style={leads_styles.accordianInputBox}>
               <Text style={leads_styles.accordianInputTitle}>Name:</Text>
               <TextInput
-                value={item.displayName}
+                value={name}
+                onChangeText={setName}
                 style={leads_styles.accordianInputText}
               />
             </View>
@@ -35,26 +65,61 @@ function AccordianItems({item, handleClick}: any) {
             <View style={leads_styles.accordianInputBox}>
               <Text style={leads_styles.accordianInputTitle}>Phone:</Text>
               <TextInput
-                value={item.phoneNumbers[0]?.number}
+                value={phone}
+                onChangeText={setPhone}
                 style={leads_styles.accordianInputText}
               />
             </View>
 
             <View style={leads_styles.accordianInputBox}>
+              <Text style={leads_styles.accordianInputTitle}>
+                Meeting Date:
+              </Text>
+              <TextInput
+                editable={false}
+                value={date.toDateString()}
+                placeholderTextColor={Colors.gray}
+                style={leads_styles.accordianInputText}
+              />
+              <TouchableOpacity onPress={() => showMode('date')}>
+                <Text style={leads_styles.dateTimeSetButton}>Set Date</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={leads_styles.accordianInputBox}>
+              <Text style={leads_styles.accordianInputTitle}>
+                Meeting Time:
+              </Text>
+              <TextInput
+                editable={false}
+                value={date.toLocaleTimeString()}
+                placeholderTextColor={Colors.gray}
+                style={leads_styles.accordianInputText}
+              />
+              <TouchableOpacity onPress={() => showMode('time')}>
+                <Text style={leads_styles.dateTimeSetButton}>Set Time</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={leads_styles.accordianInputBox}>
               <Text style={leads_styles.accordianInputTitle}>Address:</Text>
               <TextInput
+                value={address}
+                onChangeText={setAddress}
+                placeholderTextColor={Colors.gray}
                 style={leads_styles.accordianInputText}
                 placeholder="AD 331/E, Kestopur, Kol-102"
-                placeholderTextColor={Colors.gray}
               />
             </View>
 
             <View style={leads_styles.accordianInputBox}>
               <Text style={leads_styles.accordianInputTitle}>Needed:</Text>
               <TextInput
+                value={needed}
+                onChangeText={setNeeded}
+                placeholderTextColor={Colors.gray}
                 style={leads_styles.accordianInputText}
                 placeholder="1BHK, 440 sqft, Matigara, Siliguri"
-                placeholderTextColor={Colors.gray}
               />
             </View>
           </View>
@@ -69,7 +134,13 @@ function AccordianItems({item, handleClick}: any) {
               textColor={Colors.blue}
               style={leads_styles.accordianButton}
               onPress={() =>
-                handleClick(item.displayName, item.phoneNumbers[0]?.number)
+                handleClick({
+                  name,
+                  phone,
+                  address,
+                  needed,
+                  meeting: date,
+                })
               }>
               Make New Lead
             </Button>

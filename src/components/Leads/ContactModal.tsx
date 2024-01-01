@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import {addLeads} from '../../redux/leadSlice';
 import uuid from 'react-native-uuid';
 import AccordianItems from './AccordianItems';
-import {leads_styles} from '../../styles/leads_styles';
+import {leads_styles} from '../../styles/leads.styles';
 
 interface ModalProps {
   contactList: any[];
@@ -13,15 +13,43 @@ interface ModalProps {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function ContactModal({openModal, setOpenModal, contactList}: ModalProps) {
+interface addContactProp {
+  name: string;
+  phone: number;
+  address: string;
+  needed: string;
+  meeting: Date;
+}
+
+function ContactModal({
+  openModal,
+  setOpenModal,
+  contactList,
+}: ModalProps): React.JSX.Element {
   const dispatch = useDispatch();
 
-  const handleClick = (name: string, phone: number) => {
+  const handleClick = ({
+    name,
+    phone,
+    address,
+    needed,
+    meeting,
+  }: addContactProp): void => {
     const id = uuid.v4();
-    const details = {id: String(id), name, phone, status: 0};
+    const details = {
+      id: String(id),
+      name,
+      phone,
+      address,
+      needed,
+      meeting: meeting.toISOString(),
+      status: 0,
+      meeting_status: 0,
+    };
     dispatch(addLeads(details));
     setOpenModal(false);
   };
+
   return (
     <Modal
       animationType="slide"

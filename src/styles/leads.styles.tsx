@@ -98,4 +98,13 @@ export const leads_styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 3,
   },
+  dateTimeSetButton: {
+    borderWidth: 1,
+    borderColor: Colors.gray,
+    borderRadius: 50,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    backgroundColor: Colors.gray,
+    color: Colors.white,
+  },
 });

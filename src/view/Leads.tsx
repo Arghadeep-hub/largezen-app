@@ -2,8 +2,9 @@
 //   BottomTabScreenProps,
 //   BottomTabNavigationProp,
 // } from '@react-navigation/bottom-tabs';
-import React, {useState} from 'react';
+import React, {memo} from 'react';
 import {
+  Dimensions,
   FlatList,
   PermissionsAndroid,
   SafeAreaView,
@@ -18,13 +19,12 @@ import {useIsFocused} from '@react-navigation/native';
 import MenuHeader from '../models/MenuHeader';
 import {dashboard_styles} from '../styles/dashboard_styles';
 import Contact from 'react-native-contacts';
-import {leads_styles} from '../styles/leads_styles';
+import {leads_styles} from '../styles/leads.styles';
 import Colors from '../components/Colors';
 import ContactModal from '../components/Leads/ContactModal';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {storeStracture} from '../redux/store';
-import Icons from '../components/Icons';
-import {decreaseStatus, increaseStatus} from '../redux/leadSlice';
+import SignleLeadCard from '../components/Leads/SignleLeadCard';
 
 // type DetailsProps = BottomTabScreenProps<RootStackParamList, 'Leads'>;
 
@@ -36,27 +36,16 @@ const slideNav = [
   {name: 'Deal Close'},
 ];
 
-function Leads() {
-  const dispatch = useDispatch();
+function Leads(): React.JSX.Element {
   const isFocused = useIsFocused();
-  const [status, setStatus] = useState<number>(0);
-  const [contactList, setContactList] = useState<any[]>([]);
-  const [inputVal, setInputVal] = useState<string>('');
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const getAllLeads = useSelector<storeStracture>(
-    state => state.leads.collections,
+  const [status, setStatus] = React.useState<number>(0);
+  const [contactList, setContactList] = React.useState<any[]>([]);
+  const [inputVal, setInputVal] = React.useState<string>('');
+  const [openModal, setOpenModal] = React.useState<boolean>(false);
+  const getAllLeads = useSelector(
+    (state: storeStracture) => state.leads.collections,
   );
   // const navigation = useNavigation<BottomTabNavigationProp<RootStackParamList>>();
-
-  const nextStatus = (id: string) => {
-    dispatch(increaseStatus(id));
-    status < 4 && setStatus(status + 1);
-  };
-
-  const prevStatus = (id: string) => {
-    dispatch(decreaseStatus(id));
-    status > 0 && setStatus(status - 1);
-  };
 
   React.useEffect(() => {
     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
@@ -100,11 +89,10 @@ function Leads() {
           {slideNav?.map((item, id) => (
             <TouchableOpacity key={id} onPress={() => setStatus(id)}>
               <Text
-                style={
-                  status === id
-                    ? leads_styles.buttonStyleActive
-                    : leads_styles.buttonStyle
-                }>
+                style={[
+                  leads_styles.buttonStyle,
+                  status === id && leads_styles.buttonStyleActive,
+                ]}>
                 {item.name}
               </Text>
             </TouchableOpacity>
@@ -113,35 +101,20 @@ function Leads() {
 
         <FlatList
           data={getAllLeads}
+          scrollEnabled={true}
           renderItem={({item}) =>
             item.status === status ? (
-              <View
-                style={[
-                  leads_styles.itemHeading,
-                  leads_styles.itemBody,
-                  leads_styles.itemGroup,
-                ]}>
-                <View>
-                  <Text style={leads_styles.titleFont}>{item.name}</Text>
-                  <Text>{item.phone}</Text>
-                </View>
-                <View style={leads_styles.itemButton}>
-                  {item.status !== 0 && (
-                    <TouchableOpacity onPress={() => prevStatus(item.id)}>
-                      <Icons name="leftcircle" color={Colors.gray} />
-                    </TouchableOpacity>
-                  )}
-
-                  {item.status !== 4 && (
-                    <TouchableOpacity onPress={() => nextStatus(item.id)}>
-                      <Icons name="rightcircle" color={Colors.gray} />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
+              <SignleLeadCard
+                item={item}
+                key={item.id}
+                screen="leads"
+                status={status}
+                setStatus={setStatus}
+              />
             ) : null
           }
-          keyExtractor={item => item.phone}
+          keyExtractor={item => item.id}
+          style={{height: Dimensions.get('window').height - 220}}
         />
       </View>
 
@@ -160,4 +133,4 @@ function Leads() {
   );
 }
 
-export default Leads;
+export default memo(Leads);

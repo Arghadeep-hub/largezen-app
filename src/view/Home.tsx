@@ -7,12 +7,11 @@ import {dashboard_styles} from '../styles/dashboard_styles';
 
 type HomeProps = BottomTabScreenProps<RootStackParamList, 'Home'>;
 
-function Home({navigation}: HomeProps) {
+function Home({navigation}: HomeProps): React.JSX.Element {
   return (
     <View>
       <View style={dashboard_styles.LoginHead}>
         <MenuHeader title="Dashboard" />
-        <Text style={dashboard_styles.paragrapg}>Welcome to dashboard</Text>
       </View>
       {/* <Button
           title="Go to leads"

@@ -3,7 +3,7 @@ import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 export interface contact {
   id: string;
   name: string;
-  phone: number;
+  phone: string;
   status: number;
   address: string;
   needed: string;

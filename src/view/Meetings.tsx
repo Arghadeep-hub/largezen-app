@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import MenuHeader from '../models/MenuHeader';
+import MenuHeader from '../components/MenuHeader';
 import {dashboard_styles} from '../styles/dashboard_styles';
 import {meeting_styles} from '../styles/meeting.styles';
 import SignleLeadCard from '../components/Leads/SignleLeadCard';

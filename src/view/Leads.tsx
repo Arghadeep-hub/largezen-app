@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 // import {RootStackParamList} from '../App';
 import {useIsFocused} from '@react-navigation/native';
-import MenuHeader from '../models/MenuHeader';
+import MenuHeader from '../components/MenuHeader';
 import {dashboard_styles} from '../styles/dashboard_styles';
 import Contact from 'react-native-contacts';
 import {leads_styles} from '../styles/leads.styles';
@@ -55,16 +55,16 @@ function Leads(): React.JSX.Element {
     }).then(res => {
       if (res === 'granted') {
         Contact.getAll()
-          .then(con => {
+          .then(contacts => {
             // work with contacts
-            setContactList(con);
+            setContactList(contacts);
           })
           .catch(e => {
             console.log(e);
           });
       }
     });
-  }, [isFocused]);
+  }, [getAllLeads, isFocused]);
 
   return (
     <SafeAreaView style={{flex: 1, position: 'relative'}}>

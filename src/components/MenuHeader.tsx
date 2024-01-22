@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import Colors from '../components/Colors';
+import Colors from './Colors';
 import Icon from 'react-native-vector-icons/Feather';
 import {dashboard_styles} from '../styles/dashboard_styles';
 

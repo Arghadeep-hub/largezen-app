@@ -13,9 +13,9 @@ interface ModalProps {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface addContactProp {
+export interface addContactProp {
   name: string;
-  phone: number;
+  phone: string;
   address: string;
   needed: string;
   meeting: Date;

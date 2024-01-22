@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import {dashboard_styles} from '../styles/dashboard_styles';
-import MenuHeader from '../models/MenuHeader';
+import MenuHeader from '../components/MenuHeader';
 
 function Task() {
   return (

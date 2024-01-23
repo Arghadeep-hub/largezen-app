@@ -1,9 +1,16 @@
 import {configureStore} from '@reduxjs/toolkit';
-import configSlice from './slices/configSlice';
+import configSlice, {CounterSlice} from './slices/configSlice';
+import leadSlice, {leadSliceProps} from './leadSlice';
 
-export const store = configureStore({
+export interface storeStracture {
+  config: CounterSlice;
+  leads: leadSliceProps;
+}
+
+export const store = configureStore<storeStracture>({
   reducer: {
     config: configSlice,
+    leads: leadSlice,
   },
 });
 

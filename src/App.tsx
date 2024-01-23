@@ -4,6 +4,7 @@ import {store} from './redux/store';
 import ProfileProvider, {ProfileContext} from './context/ProfileContext';
 import AppWrapper from './components/Navigation/AppWrapper';
 import AuthWrapper from './components/Navigation/AuthWrapper';
+import 'react-native-gesture-handler';
 
 function App(): JSX.Element {
   const {token} = React.useContext(ProfileContext);

@@ -1,25 +1,28 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 export interface CounterSlice {
-  value: number;
+  token: string;
+  isLoadind: boolean;
 }
 
 const initialState: CounterSlice = {
-  value: 0,
+  token: '',
+  isLoadind: false,
 };
 
 export const configSlice = createSlice({
   name: 'config',
   initialState,
   reducers: {
-    increment: state => {
-      state.value += 1;
-    },
-    decrement: state => {
-      state.value -= 1;
+    setToken: (
+      state,
+      action: PayloadAction<{token: string; isLoading: boolean}>,
+    ) => {
+      state.token = action.payload.token;
+      state.isLoadind = action.payload.isLoading;
     },
   },
 });
 
-export const {increment, decrement} = configSlice.actions;
+export const {setToken} = configSlice.actions;
 export default configSlice.reducer;

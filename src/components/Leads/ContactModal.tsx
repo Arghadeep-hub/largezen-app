@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, FlatList, Modal, TextInput, View} from 'react-native';
 import Colors from '../Colors';
 import {useDispatch} from 'react-redux';
-import {addLeads} from '../../redux/leadSlice';
+import {addLeads} from '../../redux/slices/leadSlice';
 import uuid from 'react-native-uuid';
 import AccordianItems from './AccordianItems';
 import {leads_styles} from '../../styles/leads.styles';

@@ -3,7 +3,7 @@ import {TouchableOpacity, View} from 'react-native';
 import {leads_styles} from '../../styles/leads.styles';
 import {Text} from 'react-native-paper';
 import Icons from '../Icons';
-import {contact, decreaseStatus, increaseStatus} from '../../redux/leadSlice';
+import {contact, decreaseStatus, increaseStatus} from '../../redux/slices/leadSlice';
 import Colors from '../Colors';
 import {useDispatch} from 'react-redux';
 

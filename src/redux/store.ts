@@ -1,6 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit';
 import configSlice, {CounterSlice} from './slices/configSlice';
-import leadSlice, {leadSliceProps} from './leadSlice';
+import leadSlice, {leadSliceProps} from './slices/leadSlice';
+import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 
 export interface storeStracture {
   config: CounterSlice;
@@ -18,3 +19,6 @@ export const store = configureStore<storeStracture>({
 export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
+
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

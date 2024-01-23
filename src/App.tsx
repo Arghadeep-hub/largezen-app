@@ -1,20 +1,31 @@
-import React from 'react';
+import * as React from 'react';
 import {Provider} from 'react-redux';
 import {store} from './redux/store';
-import ProfileProvider, {ProfileContext} from './context/ProfileContext';
-import AppWrapper from './components/Navigation/AppWrapper';
+import {NavigationContainer} from '@react-navigation/native';
+import {StatusBar} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserWrapper from './components/Navigation/UserWrapper';
+import Colors from './components/Colors';
 import AuthWrapper from './components/Navigation/AuthWrapper';
-import 'react-native-gesture-handler';
 
 function App(): JSX.Element {
-  const {token} = React.useContext(ProfileContext);
+  const [token, setToken] = React.useState<string>('');
+  React.useEffect(() => {
+    AsyncStorage.getItem('auth-key')
+      .then(data => setToken(data !== null ? data : ''))
+      .catch(err => console.log(err));
+  }, [token]);
 
   return (
-    <ProfileProvider>
-      <Provider store={store}>
-        {token === '' ? <AppWrapper /> : <AuthWrapper />}
-      </Provider>
-    </ProfileProvider>
+    <Provider store={store}>
+      <NavigationContainer>
+        <StatusBar
+          backgroundColor={token === '' ? Colors.white : Colors.blue}
+          barStyle={token === '' ? 'dark-content' : 'light-content'}
+        />
+        {token === '' ? <AuthWrapper /> : <UserWrapper />}
+      </NavigationContainer>
+    </Provider>
   );
 }
 

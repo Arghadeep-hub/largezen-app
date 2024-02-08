@@ -3,7 +3,11 @@ import {TouchableOpacity, View} from 'react-native';
 import {leads_styles} from '../../styles/leads.styles';
 import {Text} from 'react-native-paper';
 import Icons from '../Icons';
-import {contact, decreaseStatus, increaseStatus} from '../../redux/slices/leadSlice';
+import {
+  contact,
+  decreaseStatus,
+  increaseStatus,
+} from '../../redux/slices/leadSlice';
 import Colors from '../Colors';
 import {useDispatch} from 'react-redux';
 
@@ -21,13 +25,21 @@ function SignleLeadCard({
   screen,
 }: SingleLeadProps): React.JSX.Element {
   const dispatch = useDispatch();
-  const date = new Date(item.meeting);
+  const date = new Date(item.meeting_date);
 
-  const nextStatus = (id: string) => {
-    dispatch(increaseStatus({id, screen}));
-    screen === 'meeting'
-      ? status < 2 && setStatus(status + 1)
-      : screen === 'leads' && status < 4 && setStatus(status + 1);
+  const nextStatus = (id: string): number => {
+    if (screen === 'meeting') {
+      status < 2 && setStatus(status + 1);
+      console.log(id);
+      return 1;
+    }
+
+    if (screen === 'leads') {
+      status < 4 && setStatus(status + 1);
+      console.log(id, status);
+      return 1;
+    }
+    return 0;
   };
 
   const prevStatus = (id: string) => {
@@ -49,19 +61,19 @@ function SignleLeadCard({
       </View>
       <View style={leads_styles.itemButton}>
         {status !== 0 && (
-          <TouchableOpacity onPress={() => prevStatus(item.id)}>
+          <TouchableOpacity onPress={() => prevStatus(item._id)}>
             <Icons name="leftcircle" color={Colors.gray} />
           </TouchableOpacity>
         )}
 
         {screen === 'meeting'
           ? status !== 2 && (
-              <TouchableOpacity onPress={() => nextStatus(item.id)}>
+              <TouchableOpacity onPress={() => nextStatus(item._id)}>
                 <Icons name="rightcircle" color={Colors.gray} />
               </TouchableOpacity>
             )
           : status !== 4 && (
-              <TouchableOpacity onPress={() => nextStatus(item.id)}>
+              <TouchableOpacity onPress={() => nextStatus(item._id)}>
                 <Icons name="rightcircle" color={Colors.gray} />
               </TouchableOpacity>
             )}

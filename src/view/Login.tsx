@@ -35,7 +35,7 @@ const Login = ({navigation}: LoginProps) => {
     try {
       setLoading(false);
       const response = await fetch(
-        'https://largezen.up.railway.app/user/login',
+        'https://staging-largezen.up.railway.app/user/login',
         {
           method: 'POST',
           mode: 'cors',
@@ -48,7 +48,13 @@ const Login = ({navigation}: LoginProps) => {
 
       const fetchData = await response.json();
       if (response.status === 200) {
-        await AsyncStorage.setItem('auth-key', fetchData.token);
+        await AsyncStorage.setItem(
+          'auth-data',
+          JSON.stringify({
+            user_id: fetchData.id,
+            token: fetchData.token,
+          }),
+        );
         return;
       }
 

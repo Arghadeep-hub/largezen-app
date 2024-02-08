@@ -1,14 +1,14 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 export interface contact {
-  id: string;
+  _id: string;
   name: string;
   phone: string;
-  status: number;
+  lead_status: number;
   address: string;
   needed: string;
-  meeting: string;
   meeting_status: number;
+  meeting_date: string;
 }
 
 export interface leadSliceProps {
@@ -34,7 +34,7 @@ export const leadSlice = createSlice({
         case 'meeting':
           state.collections?.map(
             item =>
-              item.id === action.payload.id &&
+              item._id === action.payload.id &&
               item.meeting_status < 2 &&
               (item.meeting_status += 1),
           );
@@ -43,9 +43,9 @@ export const leadSlice = createSlice({
         case 'leads':
           state.collections?.map(
             item =>
-              item.id === action.payload.id &&
-              item.status < 4 &&
-              (item.status += 1),
+              item._id === action.payload.id &&
+              item.lead_status < 4 &&
+              (item.lead_status += 1),
           );
           break;
 
@@ -62,7 +62,7 @@ export const leadSlice = createSlice({
         case 'meeting':
           state.collections?.map(
             item =>
-              item.id === action.payload.id &&
+              item._id === action.payload.id &&
               item.meeting_status > 0 &&
               (item.meeting_status -= 1),
           );
@@ -71,9 +71,9 @@ export const leadSlice = createSlice({
         case 'leads':
           state.collections?.map(
             item =>
-              item.id === action.payload.id &&
-              item.status > 0 &&
-              (item.status -= 1),
+              item._id === action.payload.id &&
+              item.lead_status > 0 &&
+              (item.lead_status -= 1),
           );
           break;
 
@@ -82,8 +82,12 @@ export const leadSlice = createSlice({
           break;
       }
     },
+    addAllLeads: (state, action: PayloadAction<contact[]>) => {
+      state.collections = action.payload;
+    },
   },
 });
 
-export const {addLeads, increaseStatus, decreaseStatus} = leadSlice.actions;
+export const {addLeads, increaseStatus, decreaseStatus, addAllLeads} =
+  leadSlice.actions;
 export default leadSlice.reducer;

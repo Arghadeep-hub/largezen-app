@@ -14,11 +14,13 @@ import {PhoneNumber} from 'react-native-contacts';
 
 interface ContactCardPros extends AccordianProps {
   numbers: PhoneNumber;
+  clicked: boolean;
 }
 
 function ContactCard({
   item,
   numbers,
+  clicked,
   handleClick,
 }: ContactCardPros): React.JSX.Element {
   const [date, setDate] = React.useState<Date>(new Date());
@@ -151,7 +153,8 @@ function ContactCard({
                   needed,
                   meeting: date,
                 })
-              }>
+              }
+              disabled={clicked}>
               Make New Lead
             </Button>
           </View>

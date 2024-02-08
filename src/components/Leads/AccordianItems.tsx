@@ -5,6 +5,7 @@ import {addContactProp} from './ContactModal';
 import ContactCard from './ContactCard';
 
 export interface AccordianProps {
+  clicked: boolean;
   item: Contact;
   handleClick: ({
     address,
@@ -17,6 +18,7 @@ export interface AccordianProps {
 
 function AccordianItems({
   item,
+  clicked,
   handleClick,
 }: AccordianProps): React.JSX.Element {
   return (
@@ -26,6 +28,7 @@ function AccordianItems({
           key={id}
           numbers={numbers}
           item={item}
+          clicked={clicked}
           handleClick={handleClick}
         />
       ))}

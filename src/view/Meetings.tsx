@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   SafeAreaView,
@@ -13,9 +14,9 @@ import MenuHeader from '../components/MenuHeader';
 import {dashboard_styles} from '../styles/dashboard_styles';
 import {meeting_styles} from '../styles/meeting.styles';
 import SignleLeadCard from '../components/Leads/SignleLeadCard';
-import {useSelector} from 'react-redux';
-import {storeStracture} from '../redux/store';
 import Colors from '../components/Colors';
+import {useAppSelector} from '../redux/store';
+import {useLeadByUserQuery} from '../redux/services/leadApi';
 
 const slideNav = [
   {name: 'Upcoming Meets'},
@@ -26,9 +27,8 @@ const slideNav = [
 function Meetings(): React.JSX.Element {
   const [status, setStatus] = React.useState<number>(0);
   const [inputVal, setInputVal] = React.useState<string>('');
-  const getAllLeads = useSelector(
-    (state: storeStracture) => state.leads.collections,
-  );
+  const config = useAppSelector(state => state.config);
+  const {data, isSuccess} = useLeadByUserQuery(config);
 
   return (
     <SafeAreaView style={{flex: 1, position: 'relative'}}>
@@ -64,22 +64,26 @@ function Meetings(): React.JSX.Element {
           ))}
         </ScrollView>
 
-        <FlatList
-          data={getAllLeads}
-          renderItem={({item}) =>
-            item.meeting_status === status ? (
-              <SignleLeadCard
-                item={item}
-                key={item.id}
-                screen="meeting"
-                status={status}
-                setStatus={setStatus}
-              />
-            ) : null
-          }
-          keyExtractor={item => item.id}
-          style={{height: Dimensions.get('window').height - 220}}
-        />
+        {data && isSuccess ? (
+          <FlatList
+            data={data}
+            renderItem={({item}) =>
+              item.meeting_status === status ? (
+                <SignleLeadCard
+                  item={item}
+                  key={item._id}
+                  screen="meeting"
+                  status={status}
+                  setStatus={setStatus}
+                />
+              ) : null
+            }
+            keyExtractor={item => item._id}
+            style={{height: Dimensions.get('window').height - 220}}
+          />
+        ) : (
+          <ActivityIndicator size="large" />
+        )}
       </View>
     </SafeAreaView>
   );

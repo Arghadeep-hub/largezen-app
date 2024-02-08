@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Colors from '../Colors';
 import {RootStackParamList} from '../../models/common';
 // Navigation
@@ -9,10 +9,23 @@ import Leads from '../../view/Leads';
 import Icons from '../../components/Icons';
 import Meetings from '../../view/Meetings';
 import Task from '../../view/Task';
+import {useAppDispatch} from '../../redux/store';
+import {setUser} from '../../redux/slices/configSlice';
+
+interface UserWrapperProps {
+  token: string;
+  user_id: string;
+}
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
-const UserWrapper = () => {
+const UserWrapper = ({token, user_id}: UserWrapperProps) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setUser({token, user_id}));
+  }, [dispatch, token, user_id]);
+
   return (
     <Tab.Navigator
       initialRouteName="Home"

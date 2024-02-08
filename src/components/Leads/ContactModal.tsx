@@ -1,11 +1,17 @@
-import React from 'react';
-import {Button, FlatList, Modal, TextInput, View} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Button,
+  FlatList,
+  Modal,
+  TextInput,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import Colors from '../Colors';
-import {useDispatch} from 'react-redux';
-import {addLeads} from '../../redux/slices/leadSlice';
-import uuid from 'react-native-uuid';
 import AccordianItems from './AccordianItems';
 import {leads_styles} from '../../styles/leads.styles';
+import {useAppSelector} from '../../redux/store';
+import {useAddLeadByUserMutation} from '../../redux/services/leadApi';
 
 interface ModalProps {
   contactList: any[];
@@ -26,28 +32,44 @@ function ContactModal({
   setOpenModal,
   contactList,
 }: ModalProps): React.JSX.Element {
-  const dispatch = useDispatch();
+  const [isClicked, setIsClicked] = useState<boolean>(false);
+  const config = useAppSelector(state => state.config);
+  const [addLeadByUser] = useAddLeadByUserMutation();
 
-  const handleClick = ({
+  const handleClick = async ({
     name,
     phone,
     address,
     needed,
     meeting,
-  }: addContactProp): void => {
-    const id = uuid.v4();
-    const details = {
-      id: String(id),
+  }: addContactProp): Promise<number> => {
+    setIsClicked(true);
+    if (name === '') {
+      setIsClicked(false);
+      ToastAndroid.show('Name is required', ToastAndroid.SHORT);
+      return 0;
+    }
+
+    if (phone === '') {
+      setIsClicked(false);
+      ToastAndroid.show('Phone is required', ToastAndroid.SHORT);
+      return 0;
+    }
+
+    const res: any = await addLeadByUser({
+      ...config,
       name,
-      phone,
+      phone: String(phone).split(' ').join(''),
       address,
       needed,
-      meeting: meeting.toISOString(),
-      status: 0,
-      meeting_status: 0,
-    };
-    dispatch(addLeads(details));
+      meeting,
+    });
+
+    (res?.data && ToastAndroid.show('✌ New lead added', ToastAndroid.SHORT)) ||
+      ToastAndroid.show('❌ Unable lead added', ToastAndroid.SHORT);
     setOpenModal(false);
+    setIsClicked(false);
+    return 1;
   };
 
   return (
@@ -67,7 +89,11 @@ function ContactModal({
         <FlatList
           data={contactList}
           renderItem={({item}) => (
-            <AccordianItems handleClick={handleClick} item={item} />
+            <AccordianItems
+              handleClick={handleClick}
+              item={item}
+              clicked={isClicked}
+            />
           )}
           keyExtractor={item => item.recordID}
         />
@@ -76,6 +102,7 @@ function ContactModal({
           title="Cancel"
           onPress={() => setOpenModal(false)}
           color={Colors.orange}
+          disabled={isClicked}
         />
       </View>
     </Modal>

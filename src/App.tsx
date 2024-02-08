@@ -7,26 +7,34 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserWrapper from './components/Navigation/UserWrapper';
 import Colors from './components/Colors';
 import AuthWrapper from './components/Navigation/AuthWrapper';
+import {ConfigSliceProps} from './redux/slices/configSlice';
 
 function App(): JSX.Element {
-  const [token, setToken] = React.useState<string>('');
+  const [config, setConfig] = React.useState<ConfigSliceProps>();
   React.useEffect(() => {
-    AsyncStorage.getItem('auth-key')
-      .then(data => setToken(data !== null ? data : ''))
+    AsyncStorage.getItem('auth-data')
+      .then(data => setConfig(data !== null ? JSON.parse(data) : ''))
       .catch(err => console.log(err));
-  }, [token]);
+  }, [config]);
 
   return (
     <Provider store={store}>
       <NavigationContainer>
         <StatusBar
-          backgroundColor={token === '' ? Colors.white : Colors.blue}
-          barStyle={token === '' ? 'dark-content' : 'light-content'}
+          backgroundColor={config?.user_id === '' ? Colors.white : Colors.blue}
+          barStyle={config?.user_id === '' ? 'dark-content' : 'light-content'}
         />
-        {token === '' ? <AuthWrapper /> : <UserWrapper />}
+        {config?.user_id === '' ? (
+          <AuthWrapper />
+        ) : (
+          <UserWrapper
+            token={config?.token || ''}
+            user_id={config?.user_id || ''}
+          />
+        )}
       </NavigationContainer>
     </Provider>
   );
 }
 
-export default App;
+export default React.memo(App);

@@ -1,28 +1,25 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 
-export interface CounterSlice {
+export interface ConfigSliceProps {
   token: string;
-  isLoadind: boolean;
+  user_id: string;
 }
 
-const initialState: CounterSlice = {
+const initialState: ConfigSliceProps = {
   token: '',
-  isLoadind: false,
+  user_id: '',
 };
 
 export const configSlice = createSlice({
   name: 'config',
   initialState,
   reducers: {
-    setToken: (
-      state,
-      action: PayloadAction<{token: string; isLoading: boolean}>,
-    ) => {
+    setUser: (state, action: PayloadAction<ConfigSliceProps>) => {
       state.token = action.payload.token;
-      state.isLoadind = action.payload.isLoading;
+      state.user_id = action.payload.user_id;
     },
   },
 });
 
-export const {setToken} = configSlice.actions;
+export const {setUser} = configSlice.actions;
 export default configSlice.reducer;

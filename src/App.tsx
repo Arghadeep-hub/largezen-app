@@ -21,18 +21,24 @@ function App(): JSX.Element {
     <Provider store={store}>
       <NavigationContainer>
         <StatusBar
-          backgroundColor={config?.user_id === '' ? Colors.white : Colors.blue}
-          barStyle={config?.user_id === '' ? 'dark-content' : 'light-content'}
+          backgroundColor={
+            config?.token && config?.user_id !== '' ? Colors.blue : Colors.white
+          }
+          barStyle={
+            config?.token && config?.user_id !== ''
+              ? 'light-content'
+              : 'dark-content'
+          }
         />
-        {config?.user_id === '' ? (
-          <AuthWrapper />
-        ) : (
+        {config?.token && config?.user_id !== '' ? (
           <UserWrapper
             token={config?.token || ''}
             user_id={config?.user_id || ''}
             user_role={config?.role || 0}
             user_name={config?.name || ''}
           />
+        ) : (
+          <AuthWrapper />
         )}
       </NavigationContainer>
     </Provider>

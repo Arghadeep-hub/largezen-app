@@ -66,7 +66,7 @@ const Signup = ({navigation}: SignupProps) => {
         <View style={login_styles.bottomDiv}>
           <Text>Already have an account? &nbsp;</Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Text style={{color: Colors.blue, fontWeight: '700'}}>Sign-up</Text>
+            <Text style={{color: Colors.blue, fontWeight: '700'}}>Sign-in</Text>
           </TouchableOpacity>
         </View>
       </View>

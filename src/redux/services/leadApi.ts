@@ -49,7 +49,7 @@ export const leadApi = createApi({
 
     // Update Lead
     updateLeadByUser: builder.mutation({
-      query: ({token, id}) => ({
+      query: ({token, id, props}) => ({
         url: `/lead/${id}`,
         method: 'PATCH',
         cache: 'no-cache',
@@ -58,7 +58,7 @@ export const leadApi = createApi({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify(props),
       }),
       invalidatesTags: ['LEADS'],
     }),

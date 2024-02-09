@@ -1,15 +1,12 @@
-import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import React, {useCallback} from 'react';
+import {ToastAndroid, TouchableOpacity, View} from 'react-native';
 import {leads_styles} from '../../styles/leads.styles';
 import {Text} from 'react-native-paper';
 import Icons from '../Icons';
-import {
-  contact,
-  decreaseStatus,
-  increaseStatus,
-} from '../../redux/slices/leadSlice';
+import {contact} from '../../redux/slices/leadSlice';
 import Colors from '../Colors';
-import {useDispatch} from 'react-redux';
+import {useUpdateLeadByUserMutation} from '../../redux/services/leadApi';
+import {useAppSelector} from '../../redux/store';
 
 interface SingleLeadProps {
   item: contact;
@@ -24,28 +21,83 @@ function SignleLeadCard({
   setStatus,
   screen,
 }: SingleLeadProps): React.JSX.Element {
-  const dispatch = useDispatch();
   const date = new Date(item.meeting_date);
+  const token = useAppSelector(state => state.config.token);
+  const [updateLeadByUser] = useUpdateLeadByUserMutation();
 
-  const nextStatus = (id: string): number => {
-    if (screen === 'meeting') {
-      status < 2 && setStatus(status + 1);
-      console.log(id);
-      return 1;
-    }
+  const nextStatus = useCallback(
+    async (id: string) => {
+      if (screen === 'leads' && status < 4) {
+        const leadStatus = {lead_status: status + 1};
+        const res: any = await updateLeadByUser({token, id, props: leadStatus});
 
-    if (screen === 'leads') {
-      status < 4 && setStatus(status + 1);
-      console.log(id, status);
-      return 1;
-    }
-    return 0;
-  };
+        (res?.error &&
+          ToastAndroid.show('❌ Unable to upadte lead', ToastAndroid.SHORT)) ||
+          ToastAndroid.show('✌ Lead has been updated.', ToastAndroid.SHORT);
 
-  const prevStatus = (id: string) => {
-    dispatch(decreaseStatus({id, screen}));
-    status > 0 && setStatus(status - 1);
-  };
+        setStatus(status + 1);
+        return;
+      }
+
+      if (screen === 'meeting' && status < 2) {
+        const meetingStatus = {meeting_status: status + 1};
+        const res: any = await updateLeadByUser({
+          token,
+          id,
+          props: meetingStatus,
+        });
+
+        (res?.error &&
+          ToastAndroid.show(
+            '❌ Unable to upadte meeting',
+            ToastAndroid.SHORT,
+          )) ||
+          ToastAndroid.show('✌ Meeting has been updated.', ToastAndroid.SHORT);
+
+        setStatus(status + 1);
+        return;
+      }
+      return;
+    },
+    [screen, setStatus, status, token, updateLeadByUser],
+  );
+
+  const prevStatus = useCallback(
+    async (id: string) => {
+      if (screen === 'leads') {
+        const leadStatus = {lead_status: status - 1};
+        const res: any = await updateLeadByUser({token, id, props: leadStatus});
+
+        (res?.error &&
+          ToastAndroid.show('❌ Unable to upadte lead', ToastAndroid.SHORT)) ||
+          ToastAndroid.show('✌ Lead has been updated.', ToastAndroid.SHORT);
+
+        setStatus(status - 1);
+        return;
+      }
+
+      if (screen === 'meeting') {
+        const meetingStatus = {meeting_status: status - 1};
+        const res: any = await updateLeadByUser({
+          token,
+          id,
+          props: meetingStatus,
+        });
+
+        (res?.error &&
+          ToastAndroid.show(
+            '❌ Unable to upadte meeting',
+            ToastAndroid.SHORT,
+          )) ||
+          ToastAndroid.show('✌ Meeting has been updated.', ToastAndroid.SHORT);
+
+        setStatus(status - 1);
+        return;
+      }
+      return;
+    },
+    [screen, setStatus, status, token, updateLeadByUser],
+  );
 
   return (
     <View

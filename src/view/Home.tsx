@@ -3,16 +3,23 @@ import React from 'react';
 import {Button, Text, View} from 'react-native';
 import MenuHeader from '../components/MenuHeader';
 import {dashboard_styles} from '../styles/dashboard_styles';
-import {RootStackParamList} from '../models/common';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Colors from '../components/Colors';
+import {useAppSelector} from '../redux/store';
+import {RootStackParamList} from '../models/common';
 
 type HomeProps = BottomTabScreenProps<RootStackParamList, 'Home'>;
 
 function Home({navigation}: HomeProps): React.JSX.Element {
+  const name = useAppSelector(state => state.config.user_name);
   const handleLogout = async () => {
     try {
-      const jsonValue = JSON.stringify({token: '', user_id: ''});
+      const jsonValue = JSON.stringify({
+        user_id: '',
+        token: '',
+        name: '',
+        role: '',
+      });
       await AsyncStorage.setItem('auth-data', jsonValue);
     } catch (e) {
       // saving error
@@ -23,8 +30,8 @@ function Home({navigation}: HomeProps): React.JSX.Element {
   return (
     <View style={dashboard_styles.container}>
       <View style={dashboard_styles.LoginHead}>
-        <MenuHeader title="Dashboard" />
-        <Text style={dashboard_styles.paragrapg}>Welcome to Dashboard</Text>
+        <MenuHeader title="dashboard" />
+        <Text style={dashboard_styles.paragrapg}>Welcomes {name}</Text>
       </View>
       {/* <Button
           title="Go to leads"

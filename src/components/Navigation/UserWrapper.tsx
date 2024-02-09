@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import Colors from '../Colors';
-import {RootStackParamList} from '../../models/common';
+import {RootStackParamList, UserDataProps} from '../../models/common';
 // Navigation
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // Screens
@@ -11,20 +11,16 @@ import Meetings from '../../view/Meetings';
 import Task from '../../view/Task';
 import {useAppDispatch} from '../../redux/store';
 import {setUser} from '../../redux/slices/configSlice';
-
-interface UserWrapperProps {
-  token: string;
-  user_id: string;
-}
+import Profile from '../../view/Profile';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
-const UserWrapper = ({token, user_id}: UserWrapperProps) => {
+const UserWrapper = ({token, user_id, user_name, user_role}: UserDataProps) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(setUser({token, user_id}));
-  }, [dispatch, token, user_id]);
+    dispatch(setUser({token, user_id, user_name, user_role}));
+  }, [dispatch, token, user_id, user_name, user_role]);
 
   return (
     <Tab.Navigator
@@ -63,6 +59,14 @@ const UserWrapper = ({token, user_id}: UserWrapperProps) => {
         options={{
           title: '',
           tabBarIcon: ({color}) => <Icons name="profile" color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          title: '',
+          tabBarIcon: ({color}) => <Icons name="user" color={color} />,
         }}
       />
     </Tab.Navigator>

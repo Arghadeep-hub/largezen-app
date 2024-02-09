@@ -7,10 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserWrapper from './components/Navigation/UserWrapper';
 import Colors from './components/Colors';
 import AuthWrapper from './components/Navigation/AuthWrapper';
-import {ConfigSliceProps} from './redux/slices/configSlice';
+import {LocalUserDataProps} from './models/common';
 
 function App(): JSX.Element {
-  const [config, setConfig] = React.useState<ConfigSliceProps>();
+  const [config, setConfig] = React.useState<LocalUserDataProps>();
   React.useEffect(() => {
     AsyncStorage.getItem('auth-data')
       .then(data => setConfig(data !== null ? JSON.parse(data) : ''))
@@ -30,6 +30,8 @@ function App(): JSX.Element {
           <UserWrapper
             token={config?.token || ''}
             user_id={config?.user_id || ''}
+            user_role={config?.role || 0}
+            user_name={config?.name || ''}
           />
         )}
       </NavigationContainer>

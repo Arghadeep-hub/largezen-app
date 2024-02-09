@@ -16,6 +16,7 @@ export const dashboard_styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 26,
     fontWeight: '600',
+    textTransform: 'capitalize',
   },
   paragrapg: {
     color: Colors.white,

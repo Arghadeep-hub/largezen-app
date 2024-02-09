@@ -33,7 +33,7 @@ function Meetings(): React.JSX.Element {
   return (
     <SafeAreaView style={{flex: 1, position: 'relative'}}>
       <View style={dashboard_styles.LoginHead}>
-        <MenuHeader title="Meetings" />
+        <MenuHeader title="meetings" />
         <Text style={dashboard_styles.paragrapg}>Welcome to Meetings</Text>
       </View>
 
@@ -82,7 +82,7 @@ function Meetings(): React.JSX.Element {
             style={{height: Dimensions.get('window').height - 220}}
           />
         ) : (
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" color={Colors.blue} />
         )}
       </View>
     </SafeAreaView>

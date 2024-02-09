@@ -1,33 +1,49 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Colors from './Colors';
 import Icon from 'react-native-vector-icons/Feather';
 import {dashboard_styles} from '../styles/dashboard_styles';
 import {Avatar} from 'react-native-paper';
+import {useAppSelector} from '../redux/store';
 
 interface MenuHeaderProps {
   title: string;
 }
 
 export default function MenuHeader({title}: MenuHeaderProps) {
+  const [nameLabel, setNameLabel] = useState<string>('');
+  const name = useAppSelector(state => state.config.user_name);
+
+  useEffect(() => {
+    if (name) {
+      const names = name.split(' ');
+      const first_word = names[0].split('')[0];
+      const last_word = names[1].split('')[0];
+      setNameLabel(first_word + last_word);
+    }
+  }, [name]);
+
   return (
     <View style={styles.headerDesign}>
       <Text style={dashboard_styles.heading}>{title}</Text>
 
       <View style={styles.rightSide}>
-        <View style={styles.bellContainer}>
-          <Icon name="bell" size={28} color={Colors.white} />
-          <View style={styles.absolutePos}>
-            <Text style={styles.bellPillText}>1</Text>
+        {title !== 'profile' && (
+          <View style={styles.bellContainer}>
+            <Icon name="bell" size={28} color={Colors.white} />
+            <View style={styles.absolutePos}>
+              <Text style={styles.bellPillText}>1</Text>
+            </View>
           </View>
-        </View>
-
-        <Avatar.Text
-          size={45}
-          label="AM"
-          color={Colors.blue}
-          style={styles.avatarContainer}
-        />
+        )}
+        <TouchableOpacity style={styles.avatarContainer}>
+          <Avatar.Text
+            size={45}
+            label={nameLabel}
+            color={Colors.blue}
+            style={styles.avatarText}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -66,8 +82,10 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     position: 'absolute',
-    backgroundColor: Colors.white,
     right: 0,
     top: -16,
+  },
+  avatarText: {
+    backgroundColor: Colors.white,
   },
 });

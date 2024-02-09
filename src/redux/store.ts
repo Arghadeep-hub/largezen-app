@@ -3,15 +3,17 @@ import leadSlice from './slices/leadSlice';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 import configSlice from './slices/configSlice';
 import {leadApi} from './services/leadApi';
+import {userApi} from './services/userApi';
 
 export const store = configureStore({
   reducer: {
     config: configSlice,
     leads: leadSlice,
     [leadApi.reducerPath]: leadApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
   },
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(leadApi.middleware),
+    getDefaultMiddleware().concat(leadApi.middleware, userApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

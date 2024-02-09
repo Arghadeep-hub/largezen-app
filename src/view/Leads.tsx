@@ -69,7 +69,7 @@ function Leads(): React.JSX.Element {
   return (
     <SafeAreaView style={{flex: 1, position: 'relative'}}>
       <View style={dashboard_styles.LoginHead}>
-        <MenuHeader title="Leads" />
+        <MenuHeader title="leads" />
         <Text style={dashboard_styles.paragrapg}>Welcome to Leads</Text>
       </View>
 
@@ -118,7 +118,7 @@ function Leads(): React.JSX.Element {
             style={{height: Dimensions.get('window').height - 220}}
           />
         ) : (
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" color={Colors.blue} />
         )}
       </View>
 

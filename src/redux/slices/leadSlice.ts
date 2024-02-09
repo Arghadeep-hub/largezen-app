@@ -1,15 +1,5 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-
-export interface contact {
-  _id: string;
-  name: string;
-  phone: string;
-  lead_status: number;
-  address: string;
-  needed: string;
-  meeting_status: number;
-  meeting_date: string;
-}
+import {contact} from '../../models/common';
 
 export interface leadSliceProps {
   collections: contact[];

@@ -52,6 +52,8 @@ const Login = ({navigation}: LoginProps) => {
           'auth-data',
           JSON.stringify({
             user_id: fetchData.id,
+            name: fetchData.name,
+            role: fetchData.role,
             token: fetchData.token,
           }),
         );

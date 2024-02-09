@@ -3,10 +3,10 @@ import {ToastAndroid, TouchableOpacity, View} from 'react-native';
 import {leads_styles} from '../../styles/leads.styles';
 import {Text} from 'react-native-paper';
 import Icons from '../Icons';
-import {contact} from '../../redux/slices/leadSlice';
 import Colors from '../Colors';
 import {useUpdateLeadByUserMutation} from '../../redux/services/leadApi';
 import {useAppSelector} from '../../redux/store';
+import {contact} from '../../models/common';
 
 interface SingleLeadProps {
   item: contact;

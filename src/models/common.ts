@@ -37,3 +37,8 @@ export type contact = {
   meeting_status: number;
   meeting_date: string;
 };
+
+export type LoginProps = {
+  username: string;
+  password: string;
+};

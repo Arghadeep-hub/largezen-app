@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -13,61 +13,15 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Colors from '../components/Colors';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import InputField from '../components/Login/InputField';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {AuthContext} from '../context/AuthProvider';
 
 type LoginProps = BottomTabScreenProps<RootAuthParamList, 'Login'>;
 
 const Login = ({navigation}: LoginProps) => {
+  const {login, isClicked} = React.useContext(AuthContext);
   const [visible, setVisible] = React.useState<boolean>(true);
   const [username, setUsername] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
-  const [loading, setLoading] = React.useState<boolean>(false);
-
-  const handleLogin = async () => {
-    setLoading(true);
-    if (username === '' || password === '') {
-      Alert.alert('Missing Data', 'You have fill properly', [
-        {text: 'OK', onPress: () => setLoading(false)},
-      ]);
-      return;
-    }
-
-    try {
-      setLoading(false);
-      const response = await fetch(
-        'https://staging-largezen.up.railway.app/user/login',
-        {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({email: username, password}),
-        },
-      );
-
-      const fetchData = await response.json();
-      if (response.status === 200) {
-        await AsyncStorage.setItem(
-          'auth-data',
-          JSON.stringify({
-            user_id: fetchData.id,
-            name: fetchData.name,
-            role: fetchData.role,
-            token: fetchData.token,
-          }),
-        );
-        return;
-      }
-
-      setLoading(false);
-      throw fetchData?.error || 'Unable to login';
-    } catch (error) {
-      Alert.alert('Error', String(error), [
-        {text: 'OK', onPress: () => console.log(error)},
-      ]);
-    }
-  };
 
   return (
     <SafeAreaView style={login_styles.container}>
@@ -98,15 +52,15 @@ const Login = ({navigation}: LoginProps) => {
           }
         />
 
-        {!loading ? (
+        {!isClicked ? (
           <TouchableOpacity
             style={login_styles.loginButton}
-            onPress={handleLogin}>
+            onPress={() => login({username, password})}>
             <Text style={login_styles.loginBtnText}>Log-in</Text>
           </TouchableOpacity>
         ) : (
           <View style={login_styles.loginButton}>
-            <Text style={login_styles.loginBtnText}>Log-in</Text>
+            <Text style={login_styles.loginBtnText}>Loging-in</Text>
             <ActivityIndicator color={Colors.black} />
           </View>
         )}
@@ -122,4 +76,4 @@ const Login = ({navigation}: LoginProps) => {
   );
 };
 
-export default Login;
+export default React.memo(Login);

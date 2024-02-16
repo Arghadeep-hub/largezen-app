@@ -1,25 +1,44 @@
-import React from 'react';
+import * as React from 'react';
 import {
   DateTimePickerAndroid,
   AndroidNativeProps,
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
-import {Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  Text,
+  TextInput,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {leads_styles} from '../../styles/leads.styles';
 import Colors from '../Colors';
 import Icons from '../Icons';
 import {Button} from 'react-native-paper';
 import {AccordianProps} from './AccordianItems';
 import {PhoneNumber} from 'react-native-contacts';
+import {useAppSelector} from '../../redux/store';
+import {useAddLeadByUserMutation} from '../../redux/services/leadApi';
+
+interface addContactProp {
+  name: string;
+  phone: string;
+  address: string;
+  needed: string;
+  meeting: Date;
+}
 
 interface ContactCardPros extends AccordianProps {
   numbers: PhoneNumber;
+  clicked: boolean;
 }
 
 function ContactCard({
   item,
   numbers,
-  handleClick,
+  clicked,
+  setIsClicked,
+  setOpenModal,
 }: ContactCardPros): React.JSX.Element {
   const [date, setDate] = React.useState<Date>(new Date());
   const [isExpand, setIsExpand] = React.useState<boolean>(false);
@@ -27,6 +46,8 @@ function ContactCard({
   const [phone, setPhone] = React.useState<string>('');
   const [address, setAddress] = React.useState<string>('');
   const [needed, setNeeded] = React.useState<string>('');
+  const config = useAppSelector(state => state.config);
+  const [addLeadByUser] = useAddLeadByUserMutation();
 
   React.useEffect(() => {
     setName(item.displayName);
@@ -45,6 +66,46 @@ function ContactCard({
       is24Hour: false,
     });
   };
+
+  const handleClick = React.useCallback(
+    async ({
+      name,
+      phone,
+      address,
+      needed,
+      meeting,
+    }: addContactProp): Promise<number> => {
+      setIsClicked(true);
+      if (name === '') {
+        setIsClicked(false);
+        ToastAndroid.show('Name is required', ToastAndroid.SHORT);
+        return 0;
+      }
+
+      if (phone === '') {
+        setIsClicked(false);
+        ToastAndroid.show('Phone is required', ToastAndroid.SHORT);
+        return 0;
+      }
+
+      const res: any = await addLeadByUser({
+        ...config,
+        name,
+        phone: String(phone).split(' ').join(''),
+        address,
+        needed,
+        meeting,
+      });
+
+      (res?.error &&
+        ToastAndroid.show('❌ Unable lead added', ToastAndroid.SHORT)) ||
+        ToastAndroid.show('✌ New lead added', ToastAndroid.SHORT);
+      setOpenModal(false);
+      setIsClicked(false);
+      return 1;
+    },
+    [addLeadByUser, config, setIsClicked, setOpenModal],
+  );
 
   return (
     <View style={leads_styles.itemGroup}>
@@ -151,7 +212,8 @@ function ContactCard({
                   needed,
                   meeting: date,
                 })
-              }>
+              }
+              disabled={clicked}>
               Make New Lead
             </Button>
           </View>

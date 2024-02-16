@@ -107,4 +107,12 @@ export const leads_styles = StyleSheet.create({
     backgroundColor: Colors.gray,
     color: Colors.white,
   },
+  buttonIconContent: {
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: 10,
+  },
+  buttonIconVertical: {
+    alignItems: 'center',
+  },
 });

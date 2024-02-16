@@ -2,8 +2,9 @@
 //   BottomTabScreenProps,
 //   BottomTabNavigationProp,
 // } from '@react-navigation/bottom-tabs';
-import React, {memo} from 'react';
+import * as React from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   PermissionsAndroid,
@@ -22,9 +23,9 @@ import Contact from 'react-native-contacts';
 import {leads_styles} from '../styles/leads.styles';
 import Colors from '../components/Colors';
 import ContactModal from '../components/Leads/ContactModal';
-import {useSelector} from 'react-redux';
-import {storeStracture} from '../redux/store';
+import {useAppSelector} from '../redux/store';
 import SignleLeadCard from '../components/Leads/SignleLeadCard';
+import {useLeadByUserQuery} from '../redux/services/leadApi';
 
 // type DetailsProps = BottomTabScreenProps<RootStackParamList, 'Leads'>;
 
@@ -38,14 +39,13 @@ const slideNav = [
 
 function Leads(): React.JSX.Element {
   const isFocused = useIsFocused();
+  const config = useAppSelector(state => state.config);
   const [status, setStatus] = React.useState<number>(0);
   const [contactList, setContactList] = React.useState<any[]>([]);
   const [inputVal, setInputVal] = React.useState<string>('');
   const [openModal, setOpenModal] = React.useState<boolean>(false);
-  const getAllLeads = useSelector(
-    (state: storeStracture) => state.leads.collections,
-  );
-  // const navigation = useNavigation<BottomTabNavigationProp<RootStackParamList>>();
+  const getAllLeads = useAppSelector(state => state.leads.collections);
+  const {data, isSuccess} = useLeadByUserQuery(config);
 
   React.useEffect(() => {
     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
@@ -69,7 +69,7 @@ function Leads(): React.JSX.Element {
   return (
     <SafeAreaView style={{flex: 1, position: 'relative'}}>
       <View style={dashboard_styles.LoginHead}>
-        <MenuHeader title="Leads" />
+        <MenuHeader title="leads" />
         <Text style={dashboard_styles.paragrapg}>Welcome to Leads</Text>
       </View>
 
@@ -99,23 +99,27 @@ function Leads(): React.JSX.Element {
           ))}
         </ScrollView>
 
-        <FlatList
-          data={getAllLeads}
-          scrollEnabled={true}
-          renderItem={({item}) =>
-            item.status === status ? (
-              <SignleLeadCard
-                item={item}
-                key={item.id}
-                screen="leads"
-                status={status}
-                setStatus={setStatus}
-              />
-            ) : null
-          }
-          keyExtractor={item => item.id}
-          style={{height: Dimensions.get('window').height - 220}}
-        />
+        {data && isSuccess ? (
+          <FlatList
+            data={data}
+            scrollEnabled={true}
+            renderItem={({item}) =>
+              item.lead_status === status ? (
+                <SignleLeadCard
+                  item={item}
+                  key={item._id}
+                  screen="leads"
+                  status={status}
+                  setStatus={setStatus}
+                />
+              ) : null
+            }
+            keyExtractor={item => item._id}
+            style={{height: Dimensions.get('window').height - 220}}
+          />
+        ) : (
+          <ActivityIndicator size="large" color={Colors.blue} />
+        )}
       </View>
 
       <TouchableOpacity
@@ -133,4 +137,4 @@ function Leads(): React.JSX.Element {
   );
 }
 
-export default memo(Leads);
+export default React.memo(Leads);

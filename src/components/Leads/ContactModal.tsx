@@ -1,9 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, FlatList, Modal, TextInput, View} from 'react-native';
 import Colors from '../Colors';
-import {useDispatch} from 'react-redux';
-import {addLeads} from '../../redux/leadSlice';
-import uuid from 'react-native-uuid';
 import AccordianItems from './AccordianItems';
 import {leads_styles} from '../../styles/leads.styles';
 
@@ -13,42 +10,12 @@ interface ModalProps {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface addContactProp {
-  name: string;
-  phone: string;
-  address: string;
-  needed: string;
-  meeting: Date;
-}
-
 function ContactModal({
   openModal,
   setOpenModal,
   contactList,
 }: ModalProps): React.JSX.Element {
-  const dispatch = useDispatch();
-
-  const handleClick = ({
-    name,
-    phone,
-    address,
-    needed,
-    meeting,
-  }: addContactProp): void => {
-    const id = uuid.v4();
-    const details = {
-      id: String(id),
-      name,
-      phone,
-      address,
-      needed,
-      meeting: meeting.toISOString(),
-      status: 0,
-      meeting_status: 0,
-    };
-    dispatch(addLeads(details));
-    setOpenModal(false);
-  };
+  const [isClicked, setIsClicked] = useState<boolean>(false);
 
   return (
     <Modal
@@ -67,7 +34,12 @@ function ContactModal({
         <FlatList
           data={contactList}
           renderItem={({item}) => (
-            <AccordianItems handleClick={handleClick} item={item} />
+            <AccordianItems
+              item={item}
+              clicked={isClicked}
+              setIsClicked={setIsClicked}
+              setOpenModal={setOpenModal}
+            />
           )}
           keyExtractor={item => item.recordID}
         />
@@ -76,6 +48,7 @@ function ContactModal({
           title="Cancel"
           onPress={() => setOpenModal(false)}
           color={Colors.orange}
+          disabled={isClicked}
         />
       </View>
     </Modal>

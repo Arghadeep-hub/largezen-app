@@ -10,6 +10,9 @@ import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
 
+import com.reactnativerestart.RestartPackage;
+import com.calendarevents.RNCalendarEventsPackage;
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =

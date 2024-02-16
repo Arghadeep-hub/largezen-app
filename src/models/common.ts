@@ -42,3 +42,11 @@ export type LoginProps = {
   username: string;
   password: string;
 };
+
+export type SingUpProps = {
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  password: string;
+};

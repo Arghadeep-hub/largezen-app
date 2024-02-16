@@ -1,6 +1,6 @@
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {Button, Text, View} from 'react-native';
+import {Button, SafeAreaView, Text, View} from 'react-native';
 import MenuHeader from '../components/MenuHeader';
 import {dashboard_styles} from '../styles/dashboard_styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,7 +28,7 @@ function Home({navigation}: HomeProps): React.JSX.Element {
   };
 
   return (
-    <View style={dashboard_styles.container}>
+    <SafeAreaView style={dashboard_styles.container}>
       <View style={dashboard_styles.LoginHead}>
         <MenuHeader title="dashboard" />
         <Text style={dashboard_styles.paragrapg}>Welcomes {name}</Text>
@@ -40,7 +40,7 @@ function Home({navigation}: HomeProps): React.JSX.Element {
       <View style={dashboard_styles.buttonLog}>
         <Button title="Log Out" onPress={handleLogout} color={Colors.blue} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

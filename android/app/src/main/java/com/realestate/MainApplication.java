@@ -11,6 +11,7 @@ import com.facebook.soloader.SoLoader;
 import java.util.List;
 
 import com.reactnativerestart.RestartPackage;
+import com.calendarevents.RNCalendarEventsPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 

@@ -62,6 +62,21 @@ export const leadApi = createApi({
       }),
       invalidatesTags: ['LEADS'],
     }),
+
+    // Delete Lead
+    deleteLeadByUser: builder.mutation({
+      query: ({token, id}) => ({
+        url: `/lead/${id}`,
+        method: 'DELETE',
+        cache: 'no-cache',
+        referrerPolicy: 'no-referrer',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: ['LEADS'],
+    }),
   }),
 });
 
@@ -69,4 +84,5 @@ export const {
   useLeadByUserQuery,
   useAddLeadByUserMutation,
   useUpdateLeadByUserMutation,
+  useDeleteLeadByUserMutation,
 } = leadApi;

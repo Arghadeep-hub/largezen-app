@@ -17,6 +17,8 @@ import SignleLeadCard from '../components/Leads/SignleLeadCard';
 import Colors from '../components/Colors';
 import {useAppSelector} from '../redux/store';
 import {useLeadByUserQuery} from '../redux/services/leadApi';
+import {PermissionsAndroid} from 'react-native';
+import RNCalendarEvents from 'react-native-calendar-events';
 
 const slideNav = [
   {name: 'Upcoming Meets'},
@@ -29,6 +31,18 @@ function Meetings(): React.JSX.Element {
   const [inputVal, setInputVal] = React.useState<string>('');
   const config = useAppSelector(state => state.config);
   const {data, isSuccess} = useLeadByUserQuery(config);
+
+  React.useEffect(() => {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CALENDAR, {
+      title: 'Calender',
+      message: 'This app would like to access your Calender.',
+      buttonPositive: 'Please accept bare mortal',
+    }).then(res => {
+      if (res === 'granted') {
+        RNCalendarEvents.requestPermissions();
+      }
+    });
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1, position: 'relative'}}>

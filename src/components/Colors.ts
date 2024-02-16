@@ -8,6 +8,7 @@ const skin = '#FF9671';
 const pink = '#FF6F91';
 const violate = '#D65DB1';
 const blue = '#845EC2';
+const danger = '#f45b5b';
 const Colors = {
   black,
   green,
@@ -19,5 +20,6 @@ const Colors = {
   pink,
   violate,
   blue,
+  danger,
 };
 export default Colors;

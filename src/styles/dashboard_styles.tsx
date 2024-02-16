@@ -16,6 +16,7 @@ export const dashboard_styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 26,
     fontWeight: '600',
+    textTransform: 'capitalize',
   },
   paragrapg: {
     color: Colors.white,
@@ -30,5 +31,12 @@ export const dashboard_styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     backgroundColor: Colors.blue,
+  },
+  buttonLog: {
+    width: '50%',
+    position: 'absolute',
+    bottom: 100,
+    left: 50,
+    transform: [{translateX: 50}, {translateY: 50}],
   },
 });

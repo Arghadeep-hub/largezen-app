@@ -1,23 +1,19 @@
-import React from 'react';
-
+import * as React from 'react';
 import {Contact} from 'react-native-contacts';
-import {addContactProp} from './ContactModal';
 import ContactCard from './ContactCard';
 
 export interface AccordianProps {
   item: Contact;
-  handleClick: ({
-    address,
-    meeting,
-    name,
-    needed,
-    phone,
-  }: addContactProp) => void;
+  clicked: boolean;
+  setIsClicked: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function AccordianItems({
   item,
-  handleClick,
+  clicked,
+  setIsClicked,
+  setOpenModal,
 }: AccordianProps): React.JSX.Element {
   return (
     <>
@@ -26,7 +22,9 @@ function AccordianItems({
           key={id}
           numbers={numbers}
           item={item}
-          handleClick={handleClick}
+          clicked={clicked}
+          setIsClicked={setIsClicked}
+          setOpenModal={setOpenModal}
         />
       ))}
     </>

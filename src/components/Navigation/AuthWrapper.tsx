@@ -1,29 +1,23 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {
-  CardStyleInterpolators,
-  createStackNavigator,
-} from '@react-navigation/stack';
 import React from 'react';
 import {RootAuthParamList} from '../../models/common';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 // Screens
 import Login from '../../view/Login';
 import Signup from '../../view/Signup';
 
-const Stack = createStackNavigator<RootAuthParamList>();
+const Tab = createBottomTabNavigator<RootAuthParamList>();
 
 const AuthWrapper = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-        }}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Signup" component={Signup} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {display: 'none'},
+      }}>
+      <Tab.Screen name="Login" component={Login} />
+      <Tab.Screen name="Signup" component={Signup} />
+    </Tab.Navigator>
   );
 };
 

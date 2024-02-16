@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   SafeAreaView,
@@ -13,9 +14,11 @@ import MenuHeader from '../components/MenuHeader';
 import {dashboard_styles} from '../styles/dashboard_styles';
 import {meeting_styles} from '../styles/meeting.styles';
 import SignleLeadCard from '../components/Leads/SignleLeadCard';
-import {useSelector} from 'react-redux';
-import {storeStracture} from '../redux/store';
 import Colors from '../components/Colors';
+import {useAppSelector} from '../redux/store';
+import {useLeadByUserQuery} from '../redux/services/leadApi';
+import {PermissionsAndroid} from 'react-native';
+import RNCalendarEvents from 'react-native-calendar-events';
 
 const slideNav = [
   {name: 'Upcoming Meets'},
@@ -26,14 +29,25 @@ const slideNav = [
 function Meetings(): React.JSX.Element {
   const [status, setStatus] = React.useState<number>(0);
   const [inputVal, setInputVal] = React.useState<string>('');
-  const getAllLeads = useSelector(
-    (state: storeStracture) => state.leads.collections,
-  );
+  const config = useAppSelector(state => state.config);
+  const {data, isSuccess} = useLeadByUserQuery(config);
+
+  React.useEffect(() => {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CALENDAR, {
+      title: 'Calender',
+      message: 'This app would like to access your Calender.',
+      buttonPositive: 'Please accept bare mortal',
+    }).then(res => {
+      if (res === 'granted') {
+        RNCalendarEvents.requestPermissions();
+      }
+    });
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1, position: 'relative'}}>
       <View style={dashboard_styles.LoginHead}>
-        <MenuHeader title="Meetings" />
+        <MenuHeader title="meetings" />
         <Text style={dashboard_styles.paragrapg}>Welcome to Meetings</Text>
       </View>
 
@@ -64,22 +78,26 @@ function Meetings(): React.JSX.Element {
           ))}
         </ScrollView>
 
-        <FlatList
-          data={getAllLeads}
-          renderItem={({item}) =>
-            item.meeting_status === status ? (
-              <SignleLeadCard
-                item={item}
-                key={item.id}
-                screen="meeting"
-                status={status}
-                setStatus={setStatus}
-              />
-            ) : null
-          }
-          keyExtractor={item => item.id}
-          style={{height: Dimensions.get('window').height - 220}}
-        />
+        {data && isSuccess ? (
+          <FlatList
+            data={data}
+            renderItem={({item}) =>
+              item.meeting_status === status ? (
+                <SignleLeadCard
+                  item={item}
+                  key={item._id}
+                  screen="meeting"
+                  status={status}
+                  setStatus={setStatus}
+                />
+              ) : null
+            }
+            keyExtractor={item => item._id}
+            style={{height: Dimensions.get('window').height - 220}}
+          />
+        ) : (
+          <ActivityIndicator size="large" color={Colors.blue} />
+        )}
       </View>
     </SafeAreaView>
   );

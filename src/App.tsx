@@ -1,21 +1,20 @@
-import React from 'react';
+import * as React from 'react';
 import {Provider} from 'react-redux';
 import {store} from './redux/store';
-import ProfileProvider, {ProfileContext} from './context/ProfileContext';
-import AppWrapper from './components/Navigation/AppWrapper';
-import AuthWrapper from './components/Navigation/AuthWrapper';
-import 'react-native-gesture-handler';
+import {NavigationContainer} from '@react-navigation/native';
+import ProviderWrapper from './components/Navigation/ProviderWrapper';
+import AuthProvider from './context/AuthProvider';
 
 function App(): JSX.Element {
-  const {token} = React.useContext(ProfileContext);
-
   return (
-    <ProfileProvider>
+    <AuthProvider>
       <Provider store={store}>
-        {token === '' ? <AppWrapper /> : <AuthWrapper />}
+        <NavigationContainer>
+          <ProviderWrapper />
+        </NavigationContainer>
       </Provider>
-    </ProfileProvider>
+    </AuthProvider>
   );
 }
 
-export default App;
+export default React.memo(App);

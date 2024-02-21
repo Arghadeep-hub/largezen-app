@@ -1,6 +1,6 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
-const urlAPI = 'https://staging-largezen.up.railway.app';
+const urlAPI = 'https://largezen-server.up.railway.app';
 
 export const leadApi = createApi({
   reducerPath: 'leadApi',

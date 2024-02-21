@@ -16,6 +16,7 @@ interface AuthContextType {
     password,
   }: SingUpProps) => Promise<any> | undefined;
 }
+const urlAPI = 'https://largezen-server.up.railway.app';
 
 // Define the AuthContext
 export const AuthContext = React.createContext<AuthContextType>({
@@ -58,17 +59,14 @@ function AuthProvider({children}: {children: React.JSX.Element}) {
 
       try {
         setIsClicked(false);
-        const response = await fetch(
-          'https://staging-largezen.up.railway.app/user/login',
-          {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({email: username, password}),
+        const response = await fetch(`${urlAPI}/user/login`, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        );
+          body: JSON.stringify({email: username, password}),
+        });
 
         const fetchData = await response.json();
         if (response.status === 200) {
@@ -116,24 +114,21 @@ function AuthProvider({children}: {children: React.JSX.Element}) {
 
       try {
         setIsClicked(false);
-        const response = await fetch(
-          'https://staging-largezen.up.railway.app/user/signup',
-          {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              first_name,
-              last_name,
-              email,
-              phone,
-              password,
-              role: '1',
-            }),
+        const response = await fetch(`${urlAPI}/user/signup`, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        );
+          body: JSON.stringify({
+            first_name,
+            last_name,
+            email,
+            phone,
+            password,
+            role: '1',
+          }),
+        });
 
         const fetchData = await response.json();
         if (response.status === 201) {
